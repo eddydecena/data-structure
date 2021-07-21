@@ -8,6 +8,8 @@ class HashTable():
         self.size: int = 0
         self._capacity = capacity
         self.buckets: list[Optional[Node]] = [None] * self._capacity
+        self.load_factor = 0.7
+        self.threshold = self._capacity * self.load_factor
     
     def hash(self, key) -> int:
         hashsum = 0
@@ -35,6 +37,9 @@ class HashTable():
             node = node.next
         
         self.size += 1
+        
+        if self.size >= self.threshold:
+            self.resize(2 * self._capacity + 1)
     
     def retrive(self, key: str) -> Any:
         index = self.hash(key)
@@ -67,3 +72,15 @@ class HashTable():
             node = node.next
         
         node.next = prev.next.next
+    
+    def resize(self, new_capacity: int):
+        temp: HashTable = HashTable(new_capacity)
+        
+        for node in self.buckets:
+            while node:
+                temp.insert(node.key, node.value)
+                node = node.next
+        
+        self.buckets = temp.buckets
+        self._capacity = temp._capacity
+        self.threshold = self._capacity * self.load_factor
