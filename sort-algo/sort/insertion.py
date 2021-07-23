@@ -1,12 +1,12 @@
-class Selection():
+class Insertion():
     @classmethod
     def sort(cls, array: list) -> list:
-        for i in range(len(array)):
-            min: int = i
-            for j in range(i, len(array)):
-                if cls.less(array[j], array[i]):
-                    min = j
-            array = cls.swap(array, i, min)
+        for i in range(len(array)+1):
+            for j in reversed(range(1, i)):
+                if cls.less(array[j], array[j-1]):
+                    array = cls.swap(array, j, j-1)
+                else:
+                    break
         return array
     
     @staticmethod
