@@ -1,13 +1,12 @@
 from typing import Dict
 from typing import List
-from typing import Any
 
-def bfs(GRAPH: Dict[str, List[str]]) -> Any:
+def bfs(GRAPH: Dict[str, List[str]], start: str='A') -> List[str]:
     queue: List[str] = []
     visited: List[str] = []
 
-    queue.append('A')
-    visited.append('A')
+    queue.append(start)
+    visited.append(start)
 
     while len(queue) > 0:
         node: str = queue.pop(0)
@@ -17,3 +16,5 @@ def bfs(GRAPH: Dict[str, List[str]]) -> Any:
             if neighbour not in visited:
                 visited.append(neighbour)
                 queue.append(neighbour)
+    
+    return visited
