@@ -3,9 +3,10 @@ from typing import Tuple
 from typing import Dict
 from typing import Optional
 from queue import PriorityQueue
+import heapq
 import math
 
-class LazyDijkstras():
+class Dijkstras():
     graph: Dict[int, List[Tuple[int]]]
     n: int
     m: int
@@ -23,7 +24,10 @@ class LazyDijkstras():
         self.mstCost = 0
         self.mstEdges = [None] * self.m
         self.pq = PriorityQueue()
+        self.ipq = []
         self.graph = {}
+        
+        heapq.heapify(self.ipq)
         
         for i in range(vertices):
             self.graph[i] = []
@@ -36,7 +40,7 @@ class LazyDijkstras():
         """
         self.graph[u].append((v, w))
     
-    def run(self, start: int = 0, end: Optional[int]=None, early_stop: Optional[bool]=False) -> Tuple[List[int], List[int]]:
+    def lazy(self, start: int = 0, end: Optional[int]=None, early_stop: Optional[bool]=False) -> Tuple[List[int], List[int]]:
         dist: List[int] = [math.inf] * self.n
         prev: List[int] = [None] * self.n
         
@@ -59,9 +63,37 @@ class LazyDijkstras():
                     self.pq.put((edge[0], new_dist))
             if early_stop and (index == end):
                 return dist[end]
+
+    def eager(self, start: int = 0, end: Optional[int]=None, early_stop: Optional[bool]=False):
+        dist: List[int] = [math.inf] * self.n
+        prev: List[int] = [None] * self.n
+        
+        dist[start] = 0
+        
+        print(type(self.ipq))
+        heapq.heappush(self.ipq, (start, start))
+        
+        while len(self.ipq) > 0:
+            index, min_value = heapq.heappop(self.ipq)
+            self.visited[index] = True
+            if dist[index] < min_value: continue
+            for edge in self.graph[index]:
+                if self.visited[edge[0]]: continue
+                    
+                new_dist = dist[index] + edge[1]
+                
+                if new_dist < dist[edge[0]]:
+                    prev[edge[0]] = index
+                    dist[edge[0]] = new_dist
+                    if not edge[0] in self.ipq:
+                        heapq.heappush(self.ipq, (edge[0], new_dist))
+                    else:
+                        heapq.heapreplace(self.ipq, (edge[0], new_dist))
+            if early_stop and (index == end):
+                return dist[end]
     
     def shortest_path(self, start: int, end: int):
-        dist, prev = self.run(start)
+        dist, prev = self.lazy(start=start, end=end)
         
         path: List[int] = []
         if (dist[end] == math.inf): return path

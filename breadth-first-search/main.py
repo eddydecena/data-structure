@@ -6,7 +6,7 @@ from graph import has_path
 from graph import connected
 from graph import KrushalAlgo
 from graph import LazyPrims
-from graph import LazyDijkstras
+from graph import Dijkstras
 
 # GRAPH: Dict[str, List[str]] = {
 #     'A' : ['B','C'],
@@ -33,7 +33,7 @@ GRAPH: Dict[str, List[str]] = {
     'Z' : []
 }
 
-ka = LazyDijkstras(6)
+ka = Dijkstras(6)
 ka.add_edge(0, 1, 4)
 ka.add_edge(0, 2, 4)
 ka.add_edge(1, 2, 2)
@@ -50,4 +50,4 @@ ka.add_edge(5, 3, 2)
 ka.add_edge(5, 4, 3)
 ka.add_edge(4, 2, 1)
 ka.add_edge(4, 5, 3)
-print(ka.run(start=0, end=5, early_stop=True))
+print(ka.lazy(start=0, end=5, early_stop=True))
