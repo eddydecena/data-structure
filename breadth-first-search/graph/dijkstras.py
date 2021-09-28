@@ -69,8 +69,7 @@ class Dijkstras():
         prev: List[int] = [None] * self.n
         
         dist[start] = 0
-        
-        print(type(self.ipq))
+
         heapq.heappush(self.ipq, (start, start))
         
         while len(self.ipq) > 0:
